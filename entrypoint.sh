@@ -17,6 +17,6 @@ if /usr/sbin/nslcd ; then
   echo "run nslcd"
 fi
 #/usr/sbin/rsyslogd
-if /usr/sbin/sshd -d ; then
+if /usr/sbin/sshd -D ; then
   echo "run sshd"
 fi
