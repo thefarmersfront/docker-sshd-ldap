@@ -10,13 +10,13 @@ done
 
 
 # ssh public key access config
-if [[ $(grep -c "AuthorizedKeysCommand " /etc/ssh_sshd_config ) -eq 0 ]]; then   
+if [[ $(grep -c "AuthorizedKeysCommand " /etc/ssh/sshd_config ) -eq 0 ]]; then   
   echo "AuthorizedKeysCommand /usr/local/bin/ldap_auth.sh" >> /etc/ssh/sshd_config
 fi
-if [[ $(grep -c "AuthorizedKeysCommandUser " /etc/ssh_sshd_config ) -eq 0 ]]; then
+if [[ $(grep -c "AuthorizedKeysCommandUser " /etc/ssh/sshd_config ) -eq 0 ]]; then
   echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
 fi
-if [[ $(grep -c "AuthorizedKeysFile /dev/null" /etc/ssh_sshd_config ) -eq 0 ]]; then
+if [[ $(grep -c "AuthorizedKeysFile /dev/null" /etc/ssh/sshd_config ) -eq 0 ]]; then
   echo "AuthorizedKeysFile /dev/null" >> /etc/ssh/sshd_config
 fi
 
