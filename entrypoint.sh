@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo -e "BASE ${LDAP_BASE}\nURI ${LDAP_SERVER}" > /etc/nslcd.conf
+echo -e "binddn $ADMIN_DN\nbindpw $ADMIN_DN_PASS" >> /etc/nslcd.conf
 
 for item in passwd shadow group; do
     sed -i "s/^${item}:.*/${item}: ldap compat /g" /etc/nsswitch.conf
@@ -9,9 +10,15 @@ done
 
 
 # ssh public key access config
-echo "AuthorizedKeysCommand /usr/local/bin/ldap_auth.sh" >> /etc/ssh/sshd_config
-echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
-echo "AuthorizedKeysFile /dev/null" >> /etc/ssh/sshd_config
+if [[ $(grep "AuthorizedKeysCommand " /etc/ssh_sshd_config | wc -l) -eq 0]]; then
+  echo "AuthorizedKeysCommand /usr/local/bin/ldap_auth.sh" >> /etc/ssh/sshd_config
+fi
+if [[ $(grep "AuthorizedKeysCommandUser " /etc/ssh_sshd_config | wc -l) -eq 0]]; then
+  echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
+fi
+if [[ $(grep "AuthorizedKeysFile /dev/null" /etc/ssh_sshd_config | wc -l) -eq 0]]; then
+  echo "AuthorizedKeysFile /dev/null" >> /etc/ssh/sshd_config
+fi
 
 if /usr/sbin/nslcd ; then
   echo "run nslcd"
