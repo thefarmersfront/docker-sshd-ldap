@@ -7,6 +7,11 @@ for item in passwd shadow group; do
 done
 #    sed -i "s/^Port 22/Port 2222/g" /etc/ssh/sshd_config
 
+
+# ssh public key access config
+echo "AuthorizedKeysCommand /usr/local/bin/ldap_auth.sh" >> /etc/ssh/sshd_config
+echo "AuthorizedKeysCommandUser root" >> /etc/ssh/sshd_config
+
 if /usr/sbin/nslcd ; then
   echo "run nslcd"
 fi
