@@ -8,5 +8,5 @@ done
 #    sed -i "s/^Port 22/Port 2222/g" /etc/ssh/sshd_config
 
 /usr/sbin/nslcd
-/usr/sbin/rsyslogd
+#/usr/sbin/rsyslogd
 /usr/sbin/sshd
