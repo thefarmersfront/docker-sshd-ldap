@@ -7,10 +7,10 @@ for item in passwd shadow group; do
 done
 #    sed -i "s/^Port 22/Port 2222/g" /etc/ssh/sshd_config
 
-/usr/sbin/nslcd
-echo $?
-echo "run nslcd"
+if /usr/sbin/nslcd ; then
+  echo "run nslcd"
+fi
 #/usr/sbin/rsyslogd
-/usr/sbin/sshd
-echo $?
-echo "run sshd"
+if /usr/sbin/sshd -D ; then
+  echo "run sshd"
+fi
