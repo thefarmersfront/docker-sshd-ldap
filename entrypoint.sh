@@ -10,7 +10,8 @@ done
 
 # ssh public key access config
 echo "AuthorizedKeysCommand /usr/local/bin/ldap_auth.sh" >> /etc/ssh/sshd_config
-echo "AuthorizedKeysCommandUser root" >> /etc/ssh/sshd_config
+echo "AuthorizedKeysCommandUser nobody" >> /etc/ssh/sshd_config
+echo "AuthorizedKeysFile /dev/null" >> /etc/ssh/sshd_config
 
 if /usr/sbin/nslcd ; then
   echo "run nslcd"
