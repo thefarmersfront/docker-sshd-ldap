@@ -3,7 +3,7 @@
 echo -e "BASE ${LDAP_BASE}\nURI ${LDAP_SERVER}" > /etc/nslcd.conf
 
 for item in passwd shadow group; do
-    sed -i "s/^${item}:.*/${item}: files ldap/g" /etc/nsswitch.conf
+    sed -i "s/^${item}:.*/${item}: ldap compat /g" /etc/nsswitch.conf
 done
 #    sed -i "s/^Port 22/Port 2222/g" /etc/ssh/sshd_config
 
@@ -16,6 +16,6 @@ if /usr/sbin/nslcd ; then
   echo "run nslcd"
 fi
 #/usr/sbin/rsyslogd
-if /usr/sbin/sshd -D ; then
+if /usr/sbin/sshd -d ; then
   echo "run sshd"
 fi
