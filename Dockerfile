@@ -8,7 +8,7 @@ RUN apt-get update \
      apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ADD entrypoint.sh /usr/local/bin/
-ADD ldap_auth.sh /ldap_auth
+ADD ldap_auth.sh /ldap_auth/
 ADD userlist.sh /etc/profile.d/
 
 RUN mkdir -p /var/run/sshd && chmod u+x /usr/local/bin/*.sh && chmod -R 755 /ldap_auth
