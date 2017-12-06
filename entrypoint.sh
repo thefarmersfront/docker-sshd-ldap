@@ -10,6 +10,8 @@ done
 #sed -i "s/^Port 22/Port 2222/g" /etc/ssh/sshd_config
 # clear motd 
 sed -i "s/^PrintLastLog yes/PrintLastLog no/g" /etc/ssh/sshd_config
+sed -i "s/^PermitRootLogin without-password/PermitRootLogin no/g" /etc/ssh/sshd_config
+sed -i "s/PasswordAuthentication yes/d" /etc/sshd_config
 echo "" > /etc/motd
   
 sed -i "s/ADMIN_DN /$ADMIN_DN/g" /etc/profile.d/userlist.sh
@@ -26,6 +28,12 @@ fi
 if [[ $(grep -c "AuthorizedKeysFile /dev/null" /etc/ssh/sshd_config ) -eq 0 ]]; then
   echo "AuthorizedKeysFile /dev/null" >> /etc/ssh/sshd_config
 fi
+
+if [[ $(grep -c "PasswordAuthentication no" /etc/ssh/sshd_config ) -eq 0 ]]; then
+  echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+fi
+
+
 
 if /usr/sbin/nslcd ; then
   echo "run nslcd"
