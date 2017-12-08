@@ -125,13 +125,17 @@ if [[ $(id -u) -ne 0 ]]; then
                     user_id=$userid
                 fi
                 if [[ $(fping -t 50 $host_ip | grep -c "alive") -eq 1 ]]; then
+                    echo "############################################"
                     echo "######### Connect to $connect_host #########"
+                    echo "############################################"
                     logger -t [BASTION] -i -p authpriv.info connect to server $user_id@$host_ip
                     rm -rf $MENU_LIST $SERVER_LIST
-                    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i /sshd_key/$userid $user_id@$host_ip && exit
+                    ssh -q -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i /sshd_key/$userid $user_id@$host_ip && exit
                 else
                     rm -rf $MENU_LIST $SERVER_LIST
-                    echo "######### $connect_host is Down #########"
+                    echo "############################################"
+                    echo "#########  $connect_host is Down  ##########"
+                    echo "############################################"
                     exit
                 fi
                 if [[ $? -ne 0 ]]; then
