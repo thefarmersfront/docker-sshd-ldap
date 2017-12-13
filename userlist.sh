@@ -54,10 +54,8 @@ function set_menu_list() {
             count=99
         fi
     done
-    if [[ $group_name == "admin" ]]; then
-        if [[ -n "$BASTION_SERVER_IP" ]]; then
-            echo "Bastion_server $BASTION_SERVER_IP" >>$MENU_LIST
-        fi
+    if [ $group_name == "admin" ] && [ -n "$BASTION_SERVER_IP" ]; then
+        echo "Bastion_server $BASTION_SERVER_IP" >>$MENU_LIST
     fi
     echo 100
     sleep 1
@@ -130,7 +128,8 @@ if [[ $(id -u) -ne 0 ]]; then
                     echo "############################################"
                     logger -t [BASTION] -i -p authpriv.info connect to server $user_id@$host_ip
                     rm -rf $MENU_LIST $SERVER_LIST
-                    ssh -q -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i /sshd_key/$userid $user_id@$host_ip && exit
+                    ssh-add /sshd_key/$userid 
+                    ssh -q -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$host_ip && exit
                 else
                     rm -rf $MENU_LIST $SERVER_LIST
                     echo "############################################"
