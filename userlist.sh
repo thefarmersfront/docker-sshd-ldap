@@ -63,6 +63,13 @@ function set_menu_list() {
     sleep 1
 }
 
+function exception_exit() {
+    if [[ $? -ne 0 ]]; then
+        rm -rf $MENU_LIST $SERVER_LIST
+        exit
+    fi
+}
+
 get_server_list
 get_addtional_group_list
 set_menu_list | $DIALOG --backtitle "SSH CONNECTOR" --title "Server Status Check" --gauge "Find Alive Servers..." 6 80 0
@@ -118,12 +125,12 @@ if [[ $(id -u) -ne 0 ]]; then
 
         if [[ $? -eq 0 ]]; then
             clear
+            host_ip=$(grep "^$connect_host," $SERVER_LIST | awk -F, '{print $3}')
+            user_id=$(grep "^$connect_host," $SERVER_LIST | awk -F, '{print $2}')
+            if [[ -z $user_id ]]; then
+                user_id=$userid
+            fi
             if [[ $connect_host != "Bastion_server" ]]; then
-                host_ip=$(grep "^$connect_host," $SERVER_LIST | awk -F, '{print $3}')
-                user_id=$(grep "^$connect_host," $SERVER_LIST | awk -F, '{print $2}')
-                if [[ -z $user_id ]]; then
-                    user_id=$userid
-                fi
                 if [[ $(fping -t 50 $host_ip | grep -c "alive") -eq 1 ]]; then
                     echo "############################################"
                     echo "######### Connect to $connect_host #########"
@@ -140,10 +147,7 @@ if [[ $(id -u) -ne 0 ]]; then
                     echo "############################################"
                     exit
                 fi
-                if [[ $? -ne 0 ]]; then
-                    rm -rf $MENU_LIST $SERVER_LIST
-                    exit
-                fi
+                exception_exit
             else
                 echo "############################################"
                 echo "######### Connect to $connect_host #########"
@@ -153,6 +157,7 @@ if [[ $(id -u) -ne 0 ]]; then
                 ssh -q -p $BASTION_SERVER_PORT -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$BASTION_SERVER_IP && \
                 logger -t [BASTION] -i -p authpriv.info logout to server $connect_host && \
                 exit
+                exception_exit
                 echo "Have Nice Day?"
             fi
         else
