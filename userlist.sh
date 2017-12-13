@@ -3,6 +3,7 @@
 DIALOG="dialog"
 MENU_LIST=$(mktemp /tmp/menu.list.XXX)
 SERVER_LIST=$(mktemp /tmp/server.XXX)
+BASTION_SERVER_IP=$(cat /tmp/BASTION_SERVER_IP)
 
 trap ctrl_c INT
 trap ctrl_c SIGINT
@@ -112,7 +113,7 @@ if [[ $(id -u) -ne 0 ]]; then
 
         connect_host=$($DIALOG --backtitle "SSH CONNECTOR" --cancel-label "Exit" \
             --title "SSH Server List" --clear \
-            --menu "$server_alive Server is Alive. $server_down Server is Down. \n [Select Server To Connect] " 30 80 22 $menu 3>&1 1>&2 2>&3 3>&-)
+            --menu "[ID:$userid]    [GROUP:$group_name] \n $server_alive Server is Alive. $server_down Server is Down. \n [Select Server To Connect] " 30 80 22 $menu 3>&1 1>&2 2>&3 3>&-)
 
         if [[ $? -eq 0 ]]; then
             clear
@@ -128,8 +129,9 @@ if [[ $(id -u) -ne 0 ]]; then
                     echo "############################################"
                     logger -t [BASTION] -i -p authpriv.info connect to server $user_id@$host_ip
                     rm -rf $MENU_LIST $SERVER_LIST
-                    ssh-add /sshd_key/$userid 
-                    ssh -q -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$host_ip && exit
+                    ssh -q -X -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$host_ip && \
+                    logger -t [BASTION] -i -p authpriv.info logout to server $user_id@$host_ip && \
+                    exit
                 else
                     rm -rf $MENU_LIST $SERVER_LIST
                     echo "############################################"

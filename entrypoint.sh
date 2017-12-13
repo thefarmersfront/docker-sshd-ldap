@@ -33,6 +33,7 @@ if [[ $(grep -c "PasswordAuthentication no" /etc/ssh/sshd_config ) -eq 0 ]]; the
   echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 fi
 
+echo $BASTION_SERVER_IP > /tmp/BASTION_SERVER_IP
 
 
 if /usr/sbin/nslcd ; then
