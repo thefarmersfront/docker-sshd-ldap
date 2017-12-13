@@ -56,7 +56,7 @@ function set_menu_list() {
         fi
     done
     if [ $group_name == "admin" ] && [ -n "$BASTION_SERVER_IP" ]; then
-        echo "Bastion_server $BASTION_SERVER_IP" >>$MENU_LIST
+        echo "Bastion_server alive" >>$MENU_LIST
     fi
     echo 100
     sleep 1
@@ -146,6 +146,9 @@ if [[ $(id -u) -ne 0 ]]; then
             else
                 logger -t [BASTION] -i -p authpriv.info connect to server $connect_host
                 rm -rf $MENU_LIST $SERVER_LIST
+                ssh -q -X -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$BASTION_SERVER_IP -p 2222 && \
+                logger -t [BASTION] -i -p authpriv.info logout to server $user_id@$host_ip && \
+                exit
                 echo "Have Nice Day?"
             fi
         else
