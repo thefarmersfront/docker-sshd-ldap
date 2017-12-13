@@ -3,7 +3,8 @@
 DIALOG="dialog"
 MENU_LIST=$(mktemp /tmp/menu.list.XXX)
 SERVER_LIST=$(mktemp /tmp/server.XXX)
-BASTION_SERVER_IP=$(cat /tmp/BASTION_SERVER_IP)
+BASTION_SERVER_IP=$(grep BASTION_SERVER_IP /BASTION_SERVER | awk '{print $2}')
+BASTION_SERVER_PORT=$(grep BASTION_SERVER_PORT /BASTION_SERVER | awk '{print $2}') 
 
 trap ctrl_c INT
 trap ctrl_c SIGINT
@@ -146,7 +147,7 @@ if [[ $(id -u) -ne 0 ]]; then
             else
                 logger -t [BASTION] -i -p authpriv.info connect to server $connect_host
                 rm -rf $MENU_LIST $SERVER_LIST
-                ssh -q -X -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$BASTION_SERVER_IP -p 2222 && \
+                ssh -q -X -p $BASTION_SERVER_PORT -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$BASTION_SERVER_IP  && \
                 logger -t [BASTION] -i -p authpriv.info logout to server $user_id@$host_ip && \
                 exit
                 echo "Have Nice Day?"
