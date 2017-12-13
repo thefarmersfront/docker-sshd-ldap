@@ -55,7 +55,7 @@ function set_menu_list() {
         fi
     done
     if [[ $group_name == "admin" ]]; then
-        if [[ ! -z $BASTION_SERVER_IP ]]; then
+        if [[ -n "$BASTION_SERVER_IP" ]]; then
             echo "Bastion_server $BASTION_SERVER_IP" >>$MENU_LIST
         fi
     fi
@@ -119,8 +119,8 @@ if [[ $(id -u) -ne 0 ]]; then
         if [[ $? -eq 0 ]]; then
             clear
             if [[ $connect_host != "Bastion_server" ]]; then
-                host_ip=$(grep $connect_host $SERVER_LIST | awk -F, '{print $3}')
-                user_id=$(grep $connect_host $SERVER_LIST | awk -F, '{print $2}')
+                host_ip=$(grep "^$connect_host," $SERVER_LIST | awk -F, '{print $3}')
+                user_id=$(grep "^$connect_host," $SERVER_LIST | awk -F, '{print $2}')
                 if [[ -z $user_id ]]; then
                     user_id=$userid
                 fi
@@ -147,7 +147,7 @@ if [[ $(id -u) -ne 0 ]]; then
                 rm -rf $MENU_LIST $SERVER_LIST
                 echo "Have Nice Day?"
             fi
-        else   
+        else
             rm -rf $MENU_LIST $SERVER_LIST
             echo "Exit From User"
             exit 0
