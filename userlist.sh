@@ -72,7 +72,6 @@ function exception_exit() {
 
 
 function print_connect_message() {
-connect_hostname=$1
 clear
 echo "############################################"
 echo -n "#"
@@ -149,7 +148,7 @@ if [[ $(id -u) -ne 0 ]]; then
             fi
             if [[ $connect_host != "Bastion_server" ]]; then
                 if [[ $(fping -t 50 $host_ip | grep -c "alive") -eq 1 ]]; then
-                    print_connect_message $connect_hostname
+                    print_connect_message $connect_host
                     logger -t [BASTION] -i -p authpriv.info connect to server $user_id@$host_ip
                     rm -rf $MENU_LIST $SERVER_LIST
                     ssh -q -X -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$host_ip && \
@@ -157,7 +156,7 @@ if [[ $(id -u) -ne 0 ]]; then
                     exit
                 else
                     rm -rf $MENU_LIST $SERVER_LIST
-                    print_connect_message $connect_hostname
+                    print_connect_message $connect_host
                     echo "############################################"
                     echo "#              Server is Down              #" 
                     echo "############################################"
@@ -165,7 +164,7 @@ if [[ $(id -u) -ne 0 ]]; then
                 fi
                 exception_exit
             else
-                print_connect_message $connect_hostname
+                print_connect_message $connect_host
                 logger -t [BASTION] -i -p authpriv.info connect to server $connect_host
                 rm -rf $MENU_LIST $SERVER_LIST
                 ssh -q -p $BASTION_SERVER_PORT -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$BASTION_SERVER_IP && \
