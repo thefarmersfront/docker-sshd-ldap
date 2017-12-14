@@ -75,7 +75,7 @@ function print_connect_message() {
 clear
 echo "############################################"
 echo -n "#"
-echo "connect to $1" | awk '
+echo "Connect to [$1]" | awk '
 { spaces = ('45' - length) / 2
   while (spaces-- > 0) printf (" ")
   print
