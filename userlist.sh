@@ -70,6 +70,23 @@ function exception_exit() {
     fi
 }
 
+
+function print_connect_message() {
+connect_hostname=$1
+clear
+echo "############################################"
+echo -n "#"
+echo "connect to $1" | awk '
+{ spaces = ('45' - length) / 2
+  while (spaces-- > 0) printf (" ")
+  print
+}'
+tput cup 1 43
+echo "#"
+echo "############################################"
+
+}
+
 get_server_list
 get_addtional_group_list
 set_menu_list | $DIALOG --backtitle "SSH CONNECTOR" --title "Server Status Check" --gauge "Find Alive Servers..." 6 80 0
@@ -132,9 +149,7 @@ if [[ $(id -u) -ne 0 ]]; then
             fi
             if [[ $connect_host != "Bastion_server" ]]; then
                 if [[ $(fping -t 50 $host_ip | grep -c "alive") -eq 1 ]]; then
-                    echo "############################################"
-                    echo "######### Connect to $connect_host #########"
-                    echo "############################################"
+                    print_connect_message $connect_hostname
                     logger -t [BASTION] -i -p authpriv.info connect to server $user_id@$host_ip
                     rm -rf $MENU_LIST $SERVER_LIST
                     ssh -q -X -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$host_ip && \
@@ -142,16 +157,15 @@ if [[ $(id -u) -ne 0 ]]; then
                     exit
                 else
                     rm -rf $MENU_LIST $SERVER_LIST
+                    print_connect_message $connect_hostname
                     echo "############################################"
-                    echo "#########  $connect_host is Down  ##########"
+                    echo "#              Server is Down              #" 
                     echo "############################################"
                     exit
                 fi
                 exception_exit
             else
-                echo "############################################"
-                echo "######### Connect to $connect_host #########"
-                echo "############################################"
+                print_connect_message $connect_hostname
                 logger -t [BASTION] -i -p authpriv.info connect to server $connect_host
                 rm -rf $MENU_LIST $SERVER_LIST
                 ssh -q -p $BASTION_SERVER_PORT -i /sshd_key/$userid -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user_id@$BASTION_SERVER_IP && \
