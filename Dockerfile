@@ -7,7 +7,7 @@ RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libnss-ldapd libpam-ldapd openssh-server ldap-utils nscd dialog fping rsyslog && \
      apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ADD entrypoint.sh /usr/local/bin/
+ADD entrypoint.sh record_ssh.sh /usr/local/bin/
 ADD ldap_auth.sh /ldap_auth/
 ADD userlist.sh /etc/profile.d/
 
