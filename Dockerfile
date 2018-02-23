@@ -11,9 +11,9 @@ ADD entrypoint.sh record_ssh.sh /usr/local/bin/
 ADD ldap_auth.sh /ldap_auth/
 ADD userlist.sh /etc/profile.d/
 
-RUN mkdir -p /var/run/sshd && chmod u+x /usr/local/bin/*.sh && chmod -R 755 /ldap_auth
+RUN mkdir -p /var/run/sshd && chmod u+x /usr/local/bin/*.sh && chmod -R 755 /ldap_auth && chmod a+x /usr/local/bin/record_ssh.sh /etc/profile.d/userlist.sh
 
-VOLUME /sshd_key /etc/profile.d/
+VOLUME /sshd_key
 
 EXPOSE 22
 

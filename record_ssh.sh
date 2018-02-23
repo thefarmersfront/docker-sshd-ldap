@@ -1,7 +1,9 @@
+#!/bin/bash
+
 if [[ -z $SSH_ORIGINAL_COMMAND ]]; then
 
   # The format of log files is /var/log/bastion/YYYY-MM-DD_HH-MM-SS_user
-  LOG_FILE=$(`date --date="today" "+%Y-%m-%d_%H-%M-%S"`_`whoami`)
+  LOG_FILE=$(date --date="today" "+%Y-%m-%d_%H-%M-%S"_$(whoami))
   LOG_DIR="/var/log/bastion/"
 
   # Print a welcome message
@@ -15,7 +17,7 @@ if [[ -z $SSH_ORIGINAL_COMMAND ]]; then
   SUFFIX=$(mktemp -u _XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
 
   # Wrap an interactive shell into "script" to record the SSH session
-  script -qf --timing=$LOG_DIR$LOG_FILE$SUFFIX.time $LOG_DIR$LOG_FILE$SUFFIX.data --command=/bin/bash
+  script -qf --timing=$LOG_DIR$LOG_FILE$SUFFIX.time $LOG_DIR$LOG_FILE$SUFFIX.data --command=/etc/profile.d/userlist.sh
 
 else
 
