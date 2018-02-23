@@ -11,7 +11,11 @@ ADD entrypoint.sh record_ssh.sh /usr/local/bin/
 ADD ldap_auth.sh /ldap_auth/
 ADD userlist.sh /etc/profile.d/
 
+<<<<<<< HEAD
 RUN mkdir -p /var/run/sshd && chmod u+x /usr/local/bin/*.sh && chmod -R 755 /ldap_auth && chmod a+x /usr/local/bin/record_ssh.sh /etc/profile.d/userlist.sh
+=======
+RUN mkdir -p /var/run/sshd && chmod a+x /usr/local/bin/*.sh && chmod -R 755 /ldap_auth
+>>>>>>> a13cc0bace433eefc94a5835c865063a00abb381
 
 VOLUME /sshd_key
 
