@@ -12,6 +12,9 @@ done
 sed -i "s/^PrintLastLog yes/PrintLastLog no/g" /etc/ssh/sshd_config
 sed -i "s/^PermitRootLogin without-password/PermitRootLogin no/g" /etc/ssh/sshd_config
 sed -i "s/PasswordAuthentication yes/d" /etc/sshd_config
+
+echo -e "\nForceCommand /usr/local/bin/record_ssh.sh" >> /etc/ssh/sshd_config
+
 echo "" > /etc/motd
   
 sed -i "s/ADMIN_DN /$ADMIN_DN/g" /etc/profile.d/userlist.sh
