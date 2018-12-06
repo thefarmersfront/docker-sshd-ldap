@@ -44,7 +44,7 @@ function set_menu_list() {
     #	cat $SERVER_LIST | awk -F, '{print $1" "$3}' >>  $MENU_LIST
     count=0
     for i in $(cat $SERVER_LIST | awk -F, '{print $3}'); do
-        host_name=$(grep -i $i $SERVER_LIST | awk -F, '{print $1}')
+        host_name=$(grep -w $i $SERVER_LIST | awk -F, '{print $1}')
         if [[ $(fping -t 50 $i | grep -c "alive") -eq 1 ]]; then
             echo "$host_name Alive" >>$MENU_LIST
         else
