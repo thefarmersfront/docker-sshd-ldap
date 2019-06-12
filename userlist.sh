@@ -45,10 +45,11 @@ function set_menu_list() {
     count=0
     for i in $(cat $SERVER_LIST | awk -F, '{print $3}'); do
         host_name=$(grep -w $i $SERVER_LIST | awk -F, '{print $1}')
+        ip_address=$(grep -w $hostname $SERVER_LIST | awk -F, '{print $3}' | awk -F. '{print $3"."$4}')
         if [[ $(fping -t 50 $i | grep -c "alive") -eq 1 ]]; then
-            echo "$host_name Alive" >>$MENU_LIST
+            echo "$host_name [$ip_address]-Alive" >>$MENU_LIST
         else
-            echo "$host_name Down" >>$MENU_LIST
+            echo "$host_name [$ip_address]-Down" >>$MENU_LIST
         fi
         echo $count
         count=$(expr $count + $((($RANDOM % 15))))
